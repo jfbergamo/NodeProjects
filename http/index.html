@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benvenuto nel nostro sito!</title>
+  <style>
+    /* Resetta gli stili di base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(45deg, #ff7e5f, #feb47b);
+      font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+      text-align: center;
+      color: white;
+      animation: fadeIn 2s ease-out;
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation: slideIn 1.5s ease-out;
+    }
+
+    .message {
+      font-size: 1.5rem;
+      margin-bottom: 50px;
+      opacity: 0;
+      animation: fadeMessage 3s 1s forwards;
+    }
+
+    .cta-button {
+      background: #ffffff;
+      color: #ff7e5f;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .cta-button:hover {
+      transform: scale(1.1);
+    }
+
+    /* Animazioni */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-100px);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeMessage {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Benvenuto nel nostro sito!</h1>
+    <p class="message">Siamo felici di averti con noi. Esplora e divertiti!</p>
+    <button class="cta-button" onclick="welcomeMessage()">Inizia!</button>
+  </div>
+
+  <script>
+    function welcomeMessage() {
+      const message = document.querySelector('.message');
+      message.innerHTML = "Grazie per aver cliccato! Inizia il tuo viaggio con noi.";
+      message.style.color = "#feb47b";
+      message.style.fontSize = "2rem";
+    }
+  </script>
+
+</body>
+</html>
