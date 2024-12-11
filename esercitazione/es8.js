@@ -56,14 +56,14 @@ function getClientName(socket) {
 
 function getClientNames(clients) {
     const names = [];
-    for (client in clients) {
+    for (client of clients) {
         names.push(getClientName(client));
     }
     return names;
 }
 
 function quitall(clients) {
-    for (client in clients) {
+    for (client of clients) {
         client.end();
     }
 }

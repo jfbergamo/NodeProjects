@@ -48,12 +48,12 @@ const server = net.createServer((socket) => {
 });
 
 function getClientName(socket) {
-    return `[${socket.remoteAddress === socket.localAddress ? `localhost` : socket.remoteAddress.toString().replace(`::ffff:`, ``)}, ${socket.remotePort}]`
+    return `[${socket.remoteAddress === socket.localAddress ? `localhost` : socket.remoteAddress.toString().replace(`::ffff:`, ``)}:${socket.remotePort}]`
 }
 
 function getClientNames(clients) {
     const names = [];
-    for (client in clients) {
+    for (client of clients) {
         names.push(getClientName(client));
     }
     return names;
