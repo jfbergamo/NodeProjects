@@ -20,7 +20,7 @@ const server = net.createServer((socket) => {
         }
     });
     
-    socket.on('data', (data) => {
+     socket.on('data', (data) => {
         if (data == endl) {
             input = input.trim();
             let args = input.toLowerCase().split(' ');
@@ -29,16 +29,26 @@ const server = net.createServer((socket) => {
                 case 'bcast':
                     server.emit('broadcast', args);
                     break;
+                    case 'exit':
+                        socket.emit('disconnect');
+                        return;
                 default:
                     socket.write(`${input}${endl}> `);
                     break;
-            }
+                }
             input = '';
         } else {
             input += data;
         }
     });
-
+    
+    socket.on('disconnect', () => {
+        server.sockets.splice(server.sockets.indexOf(socket));
+        const message = `Disconnessione client in corso. Client connessi: ${server.sockets.length}.`;
+        socket.write(message);
+        socket.end();
+        console.log(message);
+    })
 });
 
 server.sockets = [];
