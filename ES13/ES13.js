@@ -9,18 +9,22 @@ const endl = '\r\n';
 const server = net.createServer((socket) => {
     // Init
     server.sockets.push(socket);
+    socket.IP = (() => {
+        const addr = socket.remoteAddress;
+        return [(addr === socket.localAddress ? 'localhost' : addr.toString()), socket.remotePort];
+    })();
     socket.write(`${dev}${endl}> `)
     let input = '';
 
     // Events
     
     server.on('broadcast', (msg) => {
-        for (sock of server.sockets) {
+        server.sockets.forEach((sock) => {
             sock.write(`${msg}${endl}> `);
-        }
+        });
     });
     
-     socket.on('data', (data) => {
+    socket.on('data', (data) => {
         if (data == endl) {
             input = input.trim();
             let args = input.toLowerCase().split(' ');
@@ -29,10 +33,14 @@ const server = net.createServer((socket) => {
                 case 'bcast':
                     server.emit('broadcast', args);
                     break;
-                    case 'exit':
-                        socket.emit('disconnect');
-                        return;
+                case 'clients':
+                    socket.write(`${server.getNames().toString()}${endl}> `);
+                    break;
+                case 'exit':
+                    socket.emit('disconnect');
+                    return;
                 default:
+                    console.log(`[${IP}] ${input}`)
                     socket.write(`${input}${endl}> `);
                     break;
                 }
@@ -44,7 +52,7 @@ const server = net.createServer((socket) => {
     
     socket.on('disconnect', () => {
         server.sockets.splice(server.sockets.indexOf(socket));
-        const message = `Disconnessione client in corso. Client connessi: ${server.sockets.length}.`;
+        const message = `Disconnessione [${IP}] in corso. Client connessi: ${server.sockets.length}.`;
         socket.write(message);
         socket.end();
         console.log(message);
@@ -52,6 +60,13 @@ const server = net.createServer((socket) => {
 });
 
 server.sockets = [];
+server.getNames = () => {
+    const names = [];
+    server.sockets.forEach((sock) => {
+        names.push(sock.IP);
+    });
+    return names;
+};
 
 server.listen(PORT, () => {
     console.log(`Listening on ${PORT}...`)
