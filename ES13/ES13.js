@@ -51,7 +51,7 @@ const server = net.createServer((socket) => {
                     if (args.length != 2) {
                         socket.write(`[ERRORE] Sintassi: quit <ip> <port>`);
                     } else {
-
+                        server.emit('kick', args[0], args[1]);
                     }
                     break;
                 case 'exit':
@@ -76,9 +76,10 @@ const server = net.createServer((socket) => {
         console.log(message);
     });
 
-    server.on('kick', (addr) => {
+    server.on('kick', (ip, port) => {
+        console.log(`quit ${ip} ${port}`)
         server.sockets.forEach((sock) => {
-            if (sock.clientAddr.ip === addr.ip && sock.clientAddr.port === addr.port) {
+            if (sock.clientAddr.ip === ip && sock.clientAddr.port === port) {
                 sock.emit('disconnect');
                 return;
             }
