@@ -13,6 +13,7 @@ const server = net.createServer((socket) => {
         const addr = socket.remoteAddress;
         return [(addr === socket.localAddress ? 'localhost' : addr.toString()), socket.remotePort];
     })();
+    socket.loginTime = new Date();
     socket.write(`${dev}${endl}> `)
     let input = '';
 
@@ -36,6 +37,9 @@ const server = net.createServer((socket) => {
                 case 'clients':
                     socket.write(`${server.getNames().toString()}${endl}> `);
                     break;
+                case 'time':
+                    socket.write(`Tempo trascorso: ${(new Date().getTime() - socket.loginTime.getTime())/1000}s${endl}> `);
+                    break;
                 case 'exit':
                     socket.emit('disconnect');
                     return;
@@ -48,6 +52,7 @@ const server = net.createServer((socket) => {
         } else {
             input += data;
         }
+        
     });
     
     socket.on('disconnect', () => {
