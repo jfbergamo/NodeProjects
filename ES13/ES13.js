@@ -40,7 +40,7 @@ const server = net.createServer((socket) => {
                     socket.emit('disconnect');
                     return;
                 default:
-                    console.log(`[${IP}] ${input}`)
+                    console.log(`[${socket.IP}] ${input}`)
                     socket.write(`${input}${endl}> `);
                     break;
                 }
@@ -51,8 +51,8 @@ const server = net.createServer((socket) => {
     });
     
     socket.on('disconnect', () => {
-        server.sockets.splice(server.sockets.indexOf(socket));
-        const message = `Disconnessione [${IP}] in corso. Client connessi: ${server.sockets.length}.`;
+        server.sockets.splice(server.sockets.indexOf(socket), 1);
+        const message = `Disconnessione [${socket.IP}] in corso. Client connessi: ${server.sockets.length}.`;
         socket.write(message);
         socket.end();
         console.log(message);
@@ -63,7 +63,7 @@ server.sockets = [];
 server.getNames = () => {
     const names = [];
     server.sockets.forEach((sock) => {
-        names.push(sock.IP);
+        names.push(`[${sock.IP}]`);
     });
     return names;
 };
