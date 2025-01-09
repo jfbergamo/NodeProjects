@@ -3,26 +3,10 @@
 
 let esempio = ['pippo', 'chuck', 'elvis', 'arnold', false, 12.5, {name: "pluto", age: 2642}, [1251, 75, -3], 100, 514];
 
-function findBiggest(arr) {
-    let biggest;
-    arr.forEach((elem) => {
-        if (typeof(elem) == 'number' && !isNaN(elem)) {
-            if (biggest === undefined || elem > biggest) {
-                biggest = elem;
-            }
-        } else if (Array.isArray(elem)) {
-            let bigg = findBiggest(elem);
-            if (biggest === undefined || bigg > biggest) {
-                biggest = bigg;
-            }
-        } else if (typeof(elem) == 'object') {
-            let bigg = findBiggest(Object.values(elem));
-            if (biggest === undefined || bigg > biggest) {
-                biggest = bigg;
-            }
-        }
-    });
-    return biggest;
+function findBiggest(arr, max = -Infinity) {
+    if (typeof arr == 'number') return Math.max(arr, max);
+    if (typeof arr == 'object') Object.values(arr).forEach((elem) => max = findBiggest(elem, max));
+    return max;
 }
 
 console.log(findBiggest(esempio));
