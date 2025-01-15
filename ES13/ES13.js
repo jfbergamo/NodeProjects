@@ -1,7 +1,6 @@
 // Bergamasco Jacopo, 5AIA, A.S. 2024-2025
 
 const net = require('net');
-const { disconnect } = require('process');
 
 const PORT = 7979;
 const dev = 'Bergamasco Jacopo';
@@ -48,14 +47,17 @@ const server = net.createServer((socket) => {
                     socket.write(`Tempo trascorso: ${(new Date().getTime() - socket.loginTime.getTime())/1000}s${endl}> `);
                     break;
                 case 'quit':
-                    if (args.length != 2) {
+                    if (args.length == 0) {
+                        socket.emit('close');
+                        return;
+                    } else if (args.length != 2) {
                         socket.write(`[ERRORE] Sintassi: quit <ip> <port>`);
                     } else {
                         server.emit('kick', args[0], args[1]);
                     }
                     break;
                 case 'exit':
-                    socket.emit('disconnect');
+                    socket.emit('close');
                     return;
                 default:
                     console.log(`[${socket.name()}] ${input}`)
@@ -68,7 +70,7 @@ const server = net.createServer((socket) => {
         }
     });
     
-    socket.on('disconnect', () => {
+    socket.on('close', () => {
         server.sockets.splice(server.sockets.indexOf(socket), 1);
         const message = `Disconnessione [${socket.name()}] in corso. Client connessi: ${server.sockets.length}.`;
         socket.write(message);
@@ -80,7 +82,7 @@ const server = net.createServer((socket) => {
         console.log(`quit ${ip} ${port}`)
         server.sockets.forEach((sock) => {
             if (sock.clientAddr.ip === ip && sock.clientAddr.port === port) {
-                sock.emit('disconnect');
+                sock.emit('end');
                 return;
             }
         })
