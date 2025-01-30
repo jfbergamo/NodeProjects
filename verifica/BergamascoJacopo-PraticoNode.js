@@ -93,7 +93,7 @@ const server = net.createServer((socket) => {
                     const client = server.clients.find((client) => client.id == args[1]);
                     if (client !== undefined) {
 
-                        const payment = parseInt(args[2]);
+                        const payment = parseFloat(args[2]);
                         if (payment) {
                             server.pay(socket, payment, () => {
                                 // Aumento del credito al destinatario
